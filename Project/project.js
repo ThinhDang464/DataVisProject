@@ -49,7 +49,9 @@ d3.csv("SyrianAsylum.csv").then(function(data) {
         .style("fill", "none"); // make sure its a line, fill will become area
 
     var xAxis = d3.axisBottom().scale(xScale).ticks(6).tickFormat(d3.format("d"));
-    var yAxis = d3.axisLeft().scale(yScale);
+    var yAxis = d3.axisLeft().scale(yScale).ticks(6).tickFormat(function(d) {
+        return d / 1000000; // Divide the tick value by 1,000,000
+      });
 
     svg.append("g")
         .attr("transform", "translate(0," + (h - padding) + ")")
@@ -133,7 +135,15 @@ d3.csv("SyrianAsylum.csv").then(function(data) {
         .append("p")
         .attr("class", "caption")
         .text("Figure 1: Syrian asylum seekers by country and year");
-    
+    //add unit text
+    // Append the unit text
+    svg.append("text")
+    .attr("class", "axis-label")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -h/2)
+    .attr("y", padding-30)
+    .style("text-anchor", "middle")
+    .text("number of Syrians (millions)");
 });
 
 // GRAPH 2: BAR CHART 
@@ -209,7 +219,17 @@ d3.csv("idp.csv").then(function(data) {
   // add the y Axis
   svg2.append("g")
       .attr("transform", "translate("+barpad+",0)")
-      .call(d3.axisLeft(y));
+      .call(d3.axisLeft(y).tickFormat(function(d) {
+        return d / 1000000; // Divide the tick value by 1,000,000
+      }));
+   // Append the unit text
+   svg2.append("text")
+   .attr("class", "axis-label")
+   .attr("transform", "rotate(-90)")
+   .attr("x", -height/2)
+   .attr("y", padding-30)
+   .style("text-anchor", "middle")
+   .text("number of Syrians (millions)");   
   
   var caption = d3.select("#chart2")
         .append("p")
@@ -385,6 +405,14 @@ circles2
            .duration(200)
            .attr("r", 5);   
 });
+ // Append the unit text
+ svg3.append("text")
+ .attr("class", "axis-label")
+ .attr("transform", "rotate(-90)")
+ .attr("x", -areaHeight/2)
+ .attr("y", areaPad-30)
+ .style("text-anchor", "middle")
+ .text("Percentage %");
 });
 
 
