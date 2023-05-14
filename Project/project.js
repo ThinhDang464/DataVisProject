@@ -78,6 +78,11 @@ d3.csv("SyrianAsylum.csv").then(function(data) {
         .attr("dy", ".35em")
         .style("text-anchor", "end")
         .text(function(d) { return d[0]; });
+    
+    var tooltip = d3.select("body").append("div") //adding tooltip
+        .attr("class", "tooltip")               
+        .style("opacity", 0);
+    
     var circles = countries.selectAll(".dot")
     /*
  The code creates a new <g> element for each year in each country, and the <circle> and
@@ -93,29 +98,37 @@ d3.csv("SyrianAsylum.csv").then(function(data) {
             return "translate(" + xScale(d.Year) + "," + yScale(d.number) + ")";
         });
     
-    circles.append("circle") //append circle for each g
+    
+    // Add the tooltip to the circles (dots) of the multiline chart
+    circles.append("circle") 
         .attr("r", 5)
-       //.style("fill", function(d) { return d3.schemeCategory10[nestedData.indexOf(d3.select(this.parentNode).datum())]; })
-        .on("mouseover", function() {
+        .style("fill", function(d) { return d3.schemeCategory10[nestedData.indexOf(d3.select(this.parentNode).datum())]; })
+        .on("mouseover", function(event, d) {
+            tooltip.transition()        
+                   .duration(200)      
+                   .style("opacity", .9);      
+            tooltip.html("Year: " + d.Year + "<br/>"  + "Number: " + d.number +"<br/>"+"Country: "+d.Country)  
+                   .style("left", (event.pageX + 20) + "px")     
+                   .style("top", (event.pageY - 28) + "px");
             d3.select(this)
                 .transition()
                 .duration(200)
                 .attr("r", 8);
-            d3.select(this.parentNode).select("text").style("display", "block");
+            //d3.select(this.parentNode).select("text").style("display", "block");
         })
         .on("mouseout", function() {
+            tooltip.transition()        
+                   .duration(500)      
+                   .style("opacity", 0);  
             d3.select(this)
                 .transition()
                 .duration(200)
                 .attr("r", 5);
-            d3.select(this.parentNode).select("text").style("display", "none");
+            //d3.select(this.parentNode).select("text").style("display", "none");
         });
     
-    circles.append("text") //append text for each g
-        .text(function(d) { return d.number; })
-        .attr("y", -12)
-        .style("text-anchor", "middle")
-        .style("display", "none"); //wont display if mouse not over circle
+    
+    
     var caption = d3.select("#chart")
         .append("p")
         .attr("class", "caption")
@@ -276,4 +289,102 @@ d3.select("#button2")
     .call(d3.axisBottom(x));
 });
 });
+// GRAPH 3: AREA CHART
+
+// set the dimensions and margins of the graph
+var areaWidth = 1000;
+var areaHeight = 500;
+var areaPad = 55;
+
+// set the ranges
+var xArea = d3.scaleLinear().range([areaPad, areaWidth - areaPad]);
+var yArea = d3.scaleLinear().range([areaHeight - areaPad, areaPad]);
+
+// append the svg object to the body of the page
+var svg3 = d3.select("#chart3").append("svg") // assuming a new div "chart3" for this new chart
+    .attr("width", areaWidth)
+    .attr("height", areaHeight);
+
+// define the area
+var area = d3.area()
+    .x(function(d) { return xArea(d.Year); })
+    .y0(yArea(0)) // set y0 to 0 on the y-axis
+    .y1(function(d) { return yArea(d.Inflation); }); // y1 is the scaled value of each data point
+
+// load the data
+d3.csv("inflation.csv").then(function(data) {
+
+  // format the data
+  data.forEach(function(d) {
+    d.Year = +d.Year;
+    d.Inflation = +d.Inflation;
+  });
+
+  // Scale the range of the data in the domains
+  xArea.domain(d3.extent(data, function(d) { return d.Year; }));
+  yArea.domain([
+    d3.min(data, function(d) { return d.Inflation; }), // this should now include negative values
+    d3.max(data, function(d) { return d.Inflation; })
+  ]);
+
+
+  // add the area
+  svg3.append("path")
+      .data([data])
+      .attr("class", "area")
+      .attr("d", area)
+      .attr("fill", "steelblue");
+
+  // add the x Axis
+  svg3.append("g")
+      .attr("transform", "translate(0," + (areaHeight - areaPad) + ")")
+      .call(d3.axisBottom(xArea).tickFormat(d3.format("d")));
+
+  // add the y Axis
+  svg3.append("g")
+      .attr("transform", "translate(" + areaPad + ",0)")
+      .call(d3.axisLeft(yArea));
+
+  var caption = d3.select("#chart3")
+        .append("p")
+        .attr("class", "caption")
+        .text("Figure 3: Inflation in Syria by year");
+// Add points for each data
+var tooltip = d3.select("body").append("div") 
+    .attr("class", "tooltip")               
+    .style("opacity", 0);
+
+var circles2 = svg3.selectAll(".dot")
+    .data(data)
+    .enter().append("circle") // Uses the enter().append() method
+    .attr("class", "dot") // Assign a class for styling
+    .attr("cx", function(d) { return xArea(d.Year) })
+    .attr("cy", function(d) { return yArea(d.Inflation) })
+    .attr("r", 5)
+    
+ // Add hover effects
+circles2
+.on("mouseover", function(event, d) {    
+    tooltip.transition()        
+           .duration(200)      
+           .style("opacity", .9);      
+    tooltip.html("Year: " + d.Year + "<br/>"  + "Inflation: " + d.Inflation)  
+           .style("left", (event.pageX + 30) + "px")     
+           .style("top", (event.pageY - 28) + "px"); 
+    d3.select(this)
+           .transition()
+           .duration(200)
+           .attr("r", 8);   
+})                  
+.on("mouseout", function(d) {       
+    tooltip.transition()        
+           .duration(500)      
+           .style("opacity", 0);
+    d3.select(this)
+           .transition()
+           .duration(200)
+           .attr("r", 5);   
+});
+});
+
 

@@ -1,5 +1,5 @@
 circle {
-    opacity: 0.5;
+    opacity: 0.9;
   }
 
   .caption {
@@ -47,7 +47,7 @@ h1 {
   margin-bottom: 30px;
 }
 
-#chart, #chart2 {
+#chart, #chart2, #chart3 {
   background-color: #fff;
   padding: 20px;
   margin: 20px auto;
@@ -84,5 +84,15 @@ footer {
   bottom: 0;
   width: 100%;
 }
+
+.tooltip {
+  position: absolute;
+  opacity: 0;
+  padding: 10px;
+  background: #69b3a2;
+  color: white;
+  border-radius: 5px;
+}
+
 
 
