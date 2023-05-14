@@ -108,7 +108,8 @@ d3.csv("SyrianAsylum.csv").then(function(data) {
         .on("mouseover", function(event, d) {
             tooltip.transition()        
                    .duration(200)      
-                   .style("opacity", .9);      
+                   .style("opacity", .9)
+                   .style("display", "block");      
             tooltip.html("Year: " + d.Year + "<br/>"  + "Number: " + d.number +"<br/>"+"Country: "+d.Country)  
                    .style("left", (event.pageX + 20) + "px")     
                    .style("top", (event.pageY - 28) + "px");
@@ -121,7 +122,8 @@ d3.csv("SyrianAsylum.csv").then(function(data) {
         .on("mouseout", function() {
             tooltip.transition()        
                    .duration(500)      
-                   .style("opacity", 0);  
+                   .style("opacity", 0)
+                   .style("display","none");
             d3.select(this)
                 .transition()
                 .duration(200)
@@ -387,7 +389,8 @@ circles2
 .on("mouseover", function(event, d) {    
     tooltip.transition()        
            .duration(200)      
-           .style("opacity", .9);      
+           .style("opacity", .9)
+           .style("display", "block");      
     tooltip.html("Year: " + d.Year + "<br/>"  + "Inflation: " + d.Inflation)  
            .style("left", (event.pageX + 30) + "px")     
            .style("top", (event.pageY - 28) + "px"); 
@@ -399,7 +402,8 @@ circles2
 .on("mouseout", function(d) {       
     tooltip.transition()        
            .duration(500)      
-           .style("opacity", 0);
+           .style("opacity", 0)
+           .style("display", "none");
     d3.select(this)
            .transition()
            .duration(200)
