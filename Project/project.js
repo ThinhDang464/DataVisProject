@@ -55,10 +55,12 @@ d3.csv("SyrianAsylum.csv").then(function(data) {
 
     svg.append("g")
         .attr("transform", "translate(0," + (h - padding) + ")")
+        .style("font-size","13")
         .call(xAxis);
 
     svg.append("g")
         .attr("transform", "translate(" + padding + ",0)")
+        .style("font-size","13")
         .call(yAxis);
 
     var legend = svg.selectAll(".legend")
@@ -216,11 +218,13 @@ d3.csv("idp.csv").then(function(data) {
   svg2.append("g")
       .attr("class","x-axis") //add class to update with sort bar later
       .attr("transform", "translate(0," + (height-55) + ")")
+      .style("font-size","13")
       .call(d3.axisBottom(x));
 
   // add the y Axis
   svg2.append("g")
       .attr("transform", "translate("+barpad+",0)")
+      .style("font-size","13")
       .call(d3.axisLeft(y).tickFormat(function(d) {
         return d / 1000000; // Divide the tick value by 1,000,000
       }));
@@ -363,11 +367,13 @@ d3.csv("inflation.csv").then(function(data) {
   // add the x Axis
   svg3.append("g")
       .attr("transform", "translate(0," + (areaHeight - areaPad) + ")")
+      .style("font-size","13")
       .call(d3.axisBottom(xArea).tickFormat(d3.format("d")));
 
   // add the y Axis
   svg3.append("g")
       .attr("transform", "translate(" + areaPad + ",0)")
+      .style("font-size","13")
       .call(d3.axisLeft(yArea));
 
   var caption = d3.select("#chart3")

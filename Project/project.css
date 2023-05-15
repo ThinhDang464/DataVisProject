@@ -113,5 +113,10 @@ footer {
   border-radius: 5px;
 }
 
+#xaxis1{
+  font-family: 'Arial', sans-serif;
+    font-size: 40px;
+    fill: black;
+}
 
 
