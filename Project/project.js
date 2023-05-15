@@ -364,7 +364,7 @@ d3.csv("inflation.csv").then(function(data) {
       .attr("d", area)
       .attr("fill", "steelblue");
 
-  // add the x Axis
+  // add the x Axisss
   svg3.append("g")
       .attr("transform", "translate(0," + (areaHeight - areaPad) + ")")
       .style("font-size","13")
