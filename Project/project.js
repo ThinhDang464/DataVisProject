@@ -270,7 +270,7 @@ d3.select("#button1")
         // transition the bars
         svg2.selectAll("rect")
             .transition()
-            .duration(1000)
+            .duration(500)
             .attr("x", function(d) {
                 return x(d.Year);
             })
@@ -284,17 +284,20 @@ d3.select("#button1")
         // update the x axis
         svg2.select(".x-axis")
             .transition()
-            .duration(1000)
+            .duration(500)
             .call(d3.axisBottom(x));
     };
 d3.select("#button2")
 .on("click", function() {
     data = JSON.parse(JSON.stringify(originalData)); // Deep copy
+    data.sort(function(a,b){
+        return d3.ascending(a.Year, b.Year);
+    });
     // Now redraw the bars, exactly the same way as in sortBars()
     x.domain(data.map(function(d) { return d.Year; })); //uopdate x scale domains
     svg2.selectAll("rect")
     .transition()
-    .duration(1000)
+    .duration(500)
     .attr("x", function(d) {
         return x(d.Year);
     })
