@@ -539,5 +539,5 @@ legend.selectAll()
   var caption = d3.select("#chart4")
         .append("p")
         .attr("class", "caption")
-        .text("Figure 4: Demographic distribution by age in percentage for Syrian migrants");
+        .text("Figure 4: Demographic distribution by age in percentage for Syrian migrants in 2016");
 
