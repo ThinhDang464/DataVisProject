@@ -428,4 +428,116 @@ circles2
  .text("Percentage %");
 });
 
+//Graph 4: DOnut chart:
+var data = [
+    {"age_group": "0-11", "percent_total": 33.6},
+    {"age_group": "12-17", "percent_total": 14},
+    {"age_group": "18-59", "percent_total": 49.2},
+    {"age_group": "60+", "percent_total": 3.2}
+];
+
+var width2 = 1000
+    height2 = 500
+    margin = 40
+
+var radius = Math.min(width2, height2) / 2 - margin
+
+var svg4 = d3.select("#chart4")
+  .append("svg")
+    .attr("width", width2)
+    .attr("height", height2)
+  .append("g")
+    .attr("transform", "translate(" + width2/2 + "," + height2 / 2 + ")");//in middle
+
+var color = d3.scaleOrdinal()
+  .domain(data.map(function(d) { return d.age_group }))
+  .range(d3.schemeDark2);
+
+var pie = d3.pie()
+  .sort(null)
+  .value(function(d) { return d.percent_total; });
+
+var data_ready = pie(data)
+
+var arcGenerator = d3.arc()
+  .innerRadius(0)
+  .outerRadius(radius * 0.8);
+
+var arcHover = d3.arc() // This arc is slightly larger for the hover effect
+.innerRadius(0)
+.outerRadius(radius * 0.85);
+
+
+var path= svg4
+  .selectAll('mySlices')
+  .data(data_ready)
+  .enter()
+  .append('path')
+    .attr('d', arcGenerator)
+    .attr('fill', function(d){ return(color(d.data.age_group)) })
+    .attr("stroke", "white")
+    .style("stroke-width", "2px")
+    .style("opacity", 0.7);
+path.on("mouseover", function(d) {
+    d3.select(this).style("fill", "#F9A602") // Change color on mouse over
+    d3.select(this)
+    .transition()
+    .duration(500)
+    .attr('d', arcHover);
+    })
+    .on("mouseout", function(d) {
+    d3.select(this).style("fill", function(d){ return(color(d.data.age_group)) }); // Restore original color on mouse out
+    d3.select(this)
+    .transition()
+    .duration(500)
+    .attr('d', arcGenerator);
+});
+
+svg4
+  .selectAll('mySlices')
+  .data(data_ready)
+  .enter()
+  .append('text')
+  .text(function(d){ return d.data.percent_total })
+  .attr("transform", function(d) { return "translate(" + arcGenerator.centroid(d) + ")";  })
+  .style("text-anchor", "middle")
+  .style("font-size", 13);
+
+  // Adding legends
+legendRectSize = 18,
+legendSpacing = 4;
+// Get the legend group
+var legend = svg4.append('g')
+  .attr('transform', 'translate(' + (width2 / 2-150) + ',0)');
+
+// Add legend items
+legend.selectAll()
+  .data(data)
+  .enter()
+  .append('g')
+  .attr('transform', function(d, i) {
+    var height = legendRectSize + legendSpacing;
+    var offset =  height * data.length / 2;
+    var vert = i * height - offset;
+    return 'translate(0,' + vert + ')';
+  })
+  .each(function(d, i) {
+    var g = d3.select(this);
+
+    g.append('rect')
+      .attr('width', legendRectSize)
+      .attr('height', legendRectSize)
+      .style('fill', color(d.age_group))
+      .style('stroke', color(d.age_group));
+
+    g.append('text')
+      .attr('x', legendRectSize + legendSpacing)
+      .attr('y', legendRectSize - legendSpacing)
+      .text(d.age_group);
+  });
+  //caption
+  var caption = d3.select("#chart4")
+        .append("p")
+        .attr("class", "caption")
+        .text("Figure 4: Demographic distribution by age in percentage for Syrian migrants");
 
